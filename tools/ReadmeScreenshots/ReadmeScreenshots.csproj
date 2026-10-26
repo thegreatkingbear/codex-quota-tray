@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/CodexQuotaTray.Core/CodexQuotaTray.Core.csproj" />
+    <Compile Include="../../src/CodexQuotaTray.App/DetailsView.cs" Link="DetailsView.cs" />
+    <Compile Include="../../src/CodexQuotaTray.App/SettingsView.cs" Link="SettingsView.cs" />
+    <Compile Include="../../src/CodexQuotaTray.App/ActionButtons.cs" Link="ActionButtons.cs" />
+    <Compile Include="../../src/CodexQuotaTray.App/DesktopTheme.cs" Link="DesktopTheme.cs" />
+    <Compile Include="../../src/CodexQuotaTray.App/TrayGlyph.cs" Link="TrayGlyph.cs" />
+  </ItemGroup>
+</Project>

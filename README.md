@@ -2,6 +2,28 @@
 
 An independent Windows 11 desktop app that displays **server-reported remaining Codex usage limits** in the notification area (system tray). This is not an official OpenAI product and is not endorsed by OpenAI or independently security-audited.
 
+## At a glance
+
+**Remaining usage, right in your tray.** Open details for every quota and reset time, or choose your preferred quota and refresh interval in Settings.
+
+<p align="center">
+  <img src="docs/images/tray-icons.png" width="400" alt="Enlarged tray icons showing sample remaining usage: 75% in green, 35% in yellow, and 9% in red." />
+</p>
+
+| Usage details | Settings |
+|:---:|:---:|
+| <img src="docs/images/details.png" width="360" alt="Dark details view with sample 5-hour and 7-day quotas, remaining percentages, and local reset times." /> | <img src="docs/images/settings.png" width="414" alt="Dark settings view showing Start with Windows, refresh interval, tray quota selection, and collapsed Advanced settings." /> |
+
+These images are rendered from the app's actual UI with synthetic sample data; they contain no account usage or credentials. Window title bars are omitted. Tray icons are enlarged for readability; demo mode itself displays `D` in the tray.
+
+## Download
+
+**[Download v0.1.0 for Windows 11 x64](https://github.com/thegreatkingbear/codex-quota-tray/releases/tag/v0.1.0)** — portable prerelease, with the .NET runtime included.
+
+Choose `CodexQuotaTray-v0.1.0-win-x64.zip` under Assets, extract the entire ZIP, and run `CodexQuotaTray.App.exe`. No installer or administrator privileges are required. To view real usage, you need an installed, signed-in official Codex client. Demo mode works without an account.
+
+This preview is unsigned and Windows may show an unknown-publisher warning. See the release notes for checksums and testing limitations.
+
 ## Run
 
 The local build is at `artifacts/win-x64/CodexQuotaTray.App.exe`. Keep the entire folder together; do not move the EXE alone. The published build includes the .NET runtime and runs without administrator privileges.
@@ -66,6 +88,7 @@ To remove the app, first disable startup in Settings and save if it was enabled.
 
 ## Verification and release status
 
-See [test results](docs/TEST_RESULTS.md), [design decisions](docs/DECISIONS.md), and the [security model](docs/SECURITY.md). Live queries and the UI have been tested on Windows 11. Sleep/resume, Explorer restart, all DPI/multi-monitor combinations, and clean-account testing remain incomplete. This is an **unsigned local development build pending public-release approval**. The owner must choose a license before public distribution.
+See [test results](docs/TEST_RESULTS.md), [design decisions](docs/DECISIONS.md), and the [security model](docs/SECURITY.md). Live queries and the UI have been tested on Windows 11. Sleep/resume, Explorer restart, all DPI/multi-monitor combinations, and clean-account testing remain incomplete. The first public release is an **unsigned prerelease**, with the remaining verification gaps disclosed. Project source is licensed under [MIT](LICENSE); bundled Microsoft runtime components retain their own licenses and notices.
 
-`SHA256SUMS.txt` checks the integrity of files in the build folder. Checksums alone do not prove source-to-binary correspondence or reproducible builds. Runtime, SDK, build path, and signing differences can affect output; bit-for-bit reproducibility has not been verified. Public distribution, an installer, and automatic updates are not included.
+`SHA256SUMS.txt` checks the integrity of files in the build folder. Checksums alone do not prove source-to-binary correspondence or reproducible builds. Runtime, SDK, build path, and signing differences can affect output; bit-for-bit reproducibility has not been verified. Release packages are built from a committed source revision using `./package-release.ps1`. An installer and automatic updates are not included.
+

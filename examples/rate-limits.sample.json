@@ -1,0 +1,38 @@
+{
+  "id": 2,
+  "result": {
+    "rateLimits": {
+      "limitId": "codex",
+      "limitName": null,
+      "primary": {
+        "usedPercent": 25,
+        "windowDurationMins": 300,
+        "resetsAt": 1893456000
+      },
+      "secondary": {
+        "usedPercent": 62,
+        "windowDurationMins": 10080,
+        "resetsAt": 1894060800
+      },
+      "rateLimitReachedType": null
+    },
+    "rateLimitsByLimitId": {
+      "codex": {
+        "limitId": "codex",
+        "limitName": null,
+        "primary": {
+          "usedPercent": 25,
+          "windowDurationMins": 300,
+          "resetsAt": 1893456000
+        },
+        "secondary": {
+          "usedPercent": 62,
+          "windowDurationMins": 10080,
+          "resetsAt": 1894060800
+        },
+        "rateLimitReachedType": null
+      }
+    }
+  },
+  "_fixtureNotice": "SYNTHETIC sample values for UI development; not real account usage"
+}

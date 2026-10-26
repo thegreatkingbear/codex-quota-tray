@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../CodexQuotaTray.Codex/CodexQuotaTray.Codex.csproj" />
+    <EmbeddedResource Include="../../examples/rate-limits.sample.json" LogicalName="sample.json" />
+  </ItemGroup>
+</Project>

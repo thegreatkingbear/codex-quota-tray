@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup><ProjectReference Include="../CodexQuotaTray.Core/CodexQuotaTray.Core.csproj" /></ItemGroup>
+</Project>

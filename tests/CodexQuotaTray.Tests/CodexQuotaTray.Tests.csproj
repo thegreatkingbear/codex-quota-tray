@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../src/CodexQuotaTray.Demo/CodexQuotaTray.Demo.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/CodexQuotaTray.App/StartupRegistration.cs" Link="StartupRegistration.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../src/CodexQuotaTray.App/Settings.cs" Link="Settings.cs" /></ItemGroup>
+</Project>

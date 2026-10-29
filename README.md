@@ -60,6 +60,8 @@ Only preferences are saved to `%LOCALAPPDATA%/CodexQuotaTray/settings.json`: ref
 
 ## Build and test
 
+From a source checkout, you can also run `installer\Install.cmd` directly. It builds a self-contained payload using the pinned .NET SDK before asking you to exit the running app, then installs it in the same fixed folder. This requires the SDK and may restore Microsoft packages. The downloaded release ZIP already includes its payload and does not require an SDK. If a release ZIP is incomplete, installation stops before asking you to close the app.
+
 Development was verified on Windows 11 x64 with .NET SDK **10.0.403**, pinned in `global.json`. The SDK is not part of the source distribution. In the development environment, the official Microsoft SDK ZIP was verified using SHA-512 and extracted to `.tools/dotnet`.
 
 ```powershell

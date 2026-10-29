@@ -72,4 +72,21 @@ try {
     Get-ChildItem -LiteralPath $trayKey -ErrorAction SilentlyContinue | ForEach-Object { Remove-Item -LiteralPath $_.PSPath }
     Remove-Item -LiteralPath $trayKey
 }
+$releaseFolder = Join-Path $root 'release'
+New-Item -ItemType Directory -Path $releaseFolder | Out-Null
+Copy-Item -LiteralPath $payload -Destination (Join-Path $releaseFolder 'app') -Recurse
+Check ((Resolve-QuotaPayload $releaseFolder) -eq (Join-Path $releaseFolder 'app')) 'release payload resolved without build'
+$missingFolder = Join-Path $root 'incomplete-download'
+New-Item -ItemType Directory -Path $missingFolder | Out-Null
+$rejected = $false
+try { Resolve-QuotaPayload $missingFolder | Out-Null } catch { $rejected = $_.Exception.Message -like '*Extract the entire release ZIP*' }
+Check $rejected 'incomplete release has actionable preflight error'
+$sourceFolder = Join-Path $root 'source'
+$sourceInstaller = Join-Path $sourceFolder 'installer'
+New-Item -ItemType Directory -Path $sourceInstaller -Force | Out-Null
+$fakeProject = Join-Path $sourceFolder 'src/CodexQuotaTray.App'
+New-Item -ItemType Directory -Path $fakeProject -Force | Out-Null
+'<Project />' | Set-Content (Join-Path $fakeProject 'CodexQuotaTray.App.csproj')
+("Write-Output '" + $payload.Replace("'", "''") + "'") | Set-Content (Join-Path $sourceFolder 'prepare-install.ps1')
+Check ((Resolve-QuotaPayload $sourceInstaller) -eq $payload) 'source checkout builds and verifies payload'
 Write-Host "$script:checks installer checks passed. Test files: $root"

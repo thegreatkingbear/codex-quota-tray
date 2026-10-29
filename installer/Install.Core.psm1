@@ -17,6 +17,7 @@ function Test-QuotaPayload([string]$Payload) {
     $root = [IO.Path]::GetFullPath($Payload).TrimEnd('\') + '\'
     Assert-PlainPath $Payload
     $manifest = Join-Path $root 'FILES-SHA256.txt'
+    if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw 'Application payload is missing. Extract the entire release ZIP, then run Install.cmd from its top-level folder.' }
     $entries = @{}
     foreach ($line in Get-Content -LiteralPath $manifest) {
         if ($line -notmatch '^([a-fA-F0-9]{64})  (.+)$') { throw 'Invalid package manifest.' }
@@ -88,5 +89,19 @@ function Clear-QuotaTrayHistory([string]$TrayRoot, [string]$Executable, [string]
     return $promoted
 }
 
-Export-ModuleMember -Function Test-QuotaPayload, Install-QuotaFiles, Update-QuotaStartup, Clear-QuotaTrayHistory
+function Resolve-QuotaPayload([string]$InstallerDirectory) {
+    $payload = Join-Path $InstallerDirectory 'app'
+    if (-not (Test-Path -LiteralPath $payload)) {
+        $repository = Split-Path $InstallerDirectory -Parent
+        $builder = Join-Path $repository 'prepare-install.ps1'
+        if ((Test-Path -LiteralPath $builder -PathType Leaf) -and (Test-Path -LiteralPath (Join-Path $repository 'src/CodexQuotaTray.App/CodexQuotaTray.App.csproj'))) {
+            Write-Host 'Source checkout detected. Building the installation payload...'
+            $payload = & $builder
+        }
+    }
+    Test-QuotaPayload $payload
+    return $payload
+}
+
+Export-ModuleMember -Function Test-QuotaPayload, Install-QuotaFiles, Update-QuotaStartup, Clear-QuotaTrayHistory, Resolve-QuotaPayload
 

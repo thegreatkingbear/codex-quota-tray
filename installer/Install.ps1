@@ -8,17 +8,20 @@ try {
     Write-Host "Install/update location: $destination"
     Write-Host 'Existing preferences and your startup choice will be preserved.'
     Write-Host 'Old Quota Tray notification entries will be backed up and cleaned up.'
-    Write-Host 'No downloads, administrator access, or Windows policy changes are required.'
+    Write-Host 'No administrator access or persistent Windows policy changes are required.'
+    if (-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'app'))) {
+        Write-Host 'From a source checkout, the .NET SDK will build the app first and may restore Microsoft packages.'
+    }
     if ((Read-Host 'Continue? [Y/N]') -notmatch '^(y|yes)$') { exit 0 }
     $settingsFolder = Join-Path $env:LOCALAPPDATA 'CodexQuotaTray'
     New-Item -ItemType Directory -Path $settingsFolder -Force | Out-Null
     $installLock = [IO.File]::Open((Join-Path $settingsFolder 'install.lock'), [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+    # Preflight must succeed before asking users to stop their working app.
+    $payload = Resolve-QuotaPayload $PSScriptRoot
     while (@(Get-Process CodexQuotaTray.App -ErrorAction SilentlyContinue).Count) {
         Write-Host 'Choose Exit in the existing Quota Tray menu before continuing.'
         if ((Read-Host 'Press Enter after exiting, or type Q to cancel') -match '^[qQ]$') { exit 0 }
     }
-    $payload = Join-Path $PSScriptRoot 'app'
-    Test-QuotaPayload $payload
     $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
     $backupRoot = Join-Path $env:LOCALAPPDATA ('CodexQuotaTray\maintenance-backups\install-' + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null

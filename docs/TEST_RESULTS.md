@@ -85,3 +85,6 @@ The repository is now tracked by Git; earlier unversioned/local-only statements 
 
 ## v0.1.1 fixed-folder installer
 15 Windows PowerShell 5.1 checks passed using temporary directories and isolated HKCU test keys: fresh install, in-place update, obsolete-file removal via directory replacement, old-file backup, corruption rejection with installed files preserved, unlisted/path-traversal rejection, source/destination overlap, opt-in startup preservation, quoted startup migration, unrelated startup preservation, old tray key backup/removal, and current/unrelated tray preservation. Tests do not modify real startup or notification preferences. No clean Windows account or enterprise policy compatibility certification is claimed.
+
+## Source-checkout installer preflight fix
+Reproduced the distinction between repository installer/ (no bundled app/) and extracted releases. Added a source-only prepare-install.ps1 helper and payload resolution before the running-app exit prompt. Real Windows PowerShell 5.1 source publish and full manifest verification succeeded. 18 installer checks and 100 application checks pass, including release resolution, actionable incomplete-ZIP errors and source-builder dispatch. This verification built source payloads without replacing the user's current installation.

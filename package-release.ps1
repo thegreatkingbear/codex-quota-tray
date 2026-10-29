@@ -1,4 +1,4 @@
-param([string]$Version = '0.1.0')
+param([string]$Version = '0.1.1')
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+$') { throw 'Expected a numeric three-part version.' }
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
@@ -12,12 +12,15 @@ try {
     $destination = Join-Path $PSScriptRoot "artifacts/releases/v$Version"
     if (Test-Path -LiteralPath $destination) { throw 'Release directory already exists; choose a new version or preserve it elsewhere first.' }
     $packageName = "CodexQuotaTray-v$Version-win-x64"
-    $payload = Join-Path $destination $packageName
+    $distribution = Join-Path $destination $packageName
+    $payload = Join-Path $distribution 'app'
     New-Item -ItemType Directory -Path $payload -Force | Out-Null
     & $dotnet build -c Release
     if ($LASTEXITCODE -ne 0) { throw 'Build failed.' }
     & $dotnet run --project tests/CodexQuotaTray.Tests -c Release
     if ($LASTEXITCODE -ne 0) { throw 'Tests failed.' }
+    & "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File tests/Installer.Tests.ps1
+    if ($LASTEXITCODE -ne 0) { throw 'Installer tests failed.' }
     & $dotnet publish src/CodexQuotaTray.App -c Release -r win-x64 --self-contained true -o $payload "-p:Version=$Version" "-p:SourceRevisionId=$revision"
     if ($LASTEXITCODE -ne 0) { throw 'Publish failed.' }
     Copy-Item -LiteralPath LICENSE -Destination $payload
@@ -37,8 +40,10 @@ try {
     Get-ChildItem -LiteralPath $payload -Recurse -File | Sort-Object FullName | ForEach-Object {
         '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), [IO.Path]::GetRelativePath($payload, $_.FullName).Replace('\', '/')
     } | Set-Content -LiteralPath (Join-Path $payload 'FILES-SHA256.txt') -Encoding utf8
+    Copy-Item -Path (Join-Path $PSScriptRoot 'installer/*') -Destination $distribution
+    Copy-Item -LiteralPath "docs/releases/v$Version.md" -Destination (Join-Path $distribution 'README.txt')
     $zip = Join-Path $destination "$packageName.zip"
-    Compress-Archive -LiteralPath $payload -DestinationPath $zip -CompressionLevel Optimal
+    Compress-Archive -LiteralPath $distribution -DestinationPath $zip -CompressionLevel Optimal
     '{0}  {1}' -f (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant(), [IO.Path]::GetFileName($zip) |
         Set-Content -LiteralPath (Join-Path $destination 'SHA256SUMS.txt') -Encoding utf8
     Write-Output "Release package: $zip"

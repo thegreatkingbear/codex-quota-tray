@@ -12,3 +12,6 @@ jobs:
           global-json-file: global.json
       - run: dotnet build --configuration Release
       - run: dotnet run --project tests/CodexQuotaTray.Tests --configuration Release
+      - name: Verify installer on Windows PowerShell
+        shell: powershell
+        run: ./tests/Installer.Tests.ps1
